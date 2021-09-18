@@ -2,7 +2,7 @@ import utils
 import strategies
 
 from argparse import ArgumentParser
-from solvers import OneStepSolver
+from solvers import MultiStepSolver, OneStepSolver
 
 def parse_arguments():
     parser = ArgumentParser()
@@ -24,10 +24,12 @@ def main():
     max_rod_length, workpiece_lengths = read_task(args.input)
 
     base_permutation = [item for item in range(len(workpiece_lengths))]
-    one_step_solver = OneStepSolver(workpiece_lengths, max_rod_length, strategies.base_onestep_strat)
-    solution, crit = one_step_solver.solve(base_permutation)
-    print(solution)
-    print(crit)
+    one_step_solver = OneStepSolver(workpiece_lengths, max_rod_length, strategies.BaseOneStepStrat(workpiece_lengths))
+    multi_step_solver = MultiStepSolver(workpiece_lengths, max_rod_length, len(workpiece_lengths), strategies.BaseMultiStepStrat())
+    one_step_solution, one_step_crit = one_step_solver.solve(base_permutation)
+    multi_step_solution, multi_step_crit = multi_step_solver.solve(base_permutation)
+    print(f'One-step crit: {one_step_crit}, solution: {one_step_solution}')
+    print(f'Multi-step crit: {multi_step_crit}, solution: {multi_step_solution}')
 
 if __name__ == '__main__':
     main()
