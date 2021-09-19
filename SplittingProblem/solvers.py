@@ -36,8 +36,9 @@ class MultiStepSolver():
     def solve(self, permutation):
         best_solution = []
         best_crit = len(permutation)
+        current_solution = []
         for iter_number in range(self.iters):
-            permutation = self.strategy.get(permutation)
+            permutation = self.strategy.get(permutation, current_solution)
             current_solution, current_crit = self._one_step_solver.solve(permutation)
             if current_crit < best_crit:
                 best_crit = current_crit

@@ -30,16 +30,20 @@ def main():
 
     one_step_solver_custom = OneStepSolver(workpiece_lengths,
                                     max_rod_length, strategies.CustomOneStepStrat(workpiece_lengths))
-    # multi_step_solver = MultiStepSolver(workpiece_lengths,
-    #                                     max_rod_length, len(workpiece_lengths), strategies.BaseMultiStepStrat())
+    multi_step_solver = MultiStepSolver(workpiece_lengths,
+                                        max_rod_length, len(workpiece_lengths), strategies.BaseMultiStepStrat())
+    multi_step_solver_custom = MultiStepSolver(workpiece_lengths,
+                                        max_rod_length, len(workpiece_lengths), strategies.CustomMultiStepStrat(workpiece_lengths))
 
     one_step_solution, one_step_crit = one_step_solver.solve(base_permutation)
     one_step_solution_custom, one_step_crit_custom = one_step_solver_custom.solve(base_permutation)
-    # multi_step_solution, multi_step_crit = multi_step_solver.solve(base_permutation)
+    multi_step_solution, multi_step_crit = multi_step_solver.solve(base_permutation)
+    multi_step_solution_custom, multi_step_crit_custom = multi_step_solver_custom.solve(base_permutation)
 
     print(f'One-step crit: {one_step_crit}')
     print(f'One-step custom crit: {one_step_crit_custom}')
-    # print(f'Multi-step crit: {multi_step_crit}, solution: {multi_step_solution}')
+    print(f'Multi-step crit: {multi_step_crit}')
+    print(f'Multi-step crit custom: {multi_step_crit_custom}')
 
 if __name__ == '__main__':
     main()
