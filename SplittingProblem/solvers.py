@@ -11,11 +11,11 @@ class OneStepSolver():
         for idx, rod_length in enumerate(self._rod_lengths):
             if rod_length >= workpiece_length:
                 self._rod_lengths[idx] -= workpiece_length
-                self._solution[idx].append(workpiece_length)
+                self._solution[idx].append(workpiece_number)
                 return
 
         self._rod_lengths.append(self.max_rod_length - workpiece_length)
-        self._solution.append([workpiece_length])
+        self._solution.append([workpiece_number])
 
     def solve(self, permutation):
         self._solution.clear()
