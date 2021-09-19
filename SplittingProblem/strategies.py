@@ -1,4 +1,5 @@
 from random import shuffle as random_shuffle
+from math import ceil as math_ceil
 
 class BaseOneStepStrat():
     def __init__(self, workpiece_lengths):
@@ -15,3 +16,10 @@ class BaseMultiStepStrat():
         result_permutation = permutation.copy()
         random_shuffle(result_permutation)
         return result_permutation
+
+class CustomOneStepStrat():
+    def __init__(self, workpience_lengths):
+        self.workpience_lengths = workpience_lengths
+
+    def get(self, permutation):
+        split_idx = math_ceil(len(permutation) / 2)
