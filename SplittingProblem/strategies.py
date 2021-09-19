@@ -16,7 +16,6 @@ class CustomOneStepStrat():
     def get(self, permutation):
         sorted_permutaion = BaseOneStepStrat(self.workpiece_lengths).get(permutation)
         result_permutation = []
-        print(permutation)
 
         while len(sorted_permutaion) > 0:
             median = sorted_permutaion.pop(math_floor(len(sorted_permutaion) / 2))
