@@ -2,7 +2,7 @@ import utils
 import strategies
 
 from argparse import ArgumentParser
-from solvers import MultiStepSolver, OneStepSolver
+from solvers import IterSolver, GreedySolver
 
 def parse_arguments():
     parser = ArgumentParser()
@@ -25,25 +25,25 @@ def main():
     max_rod_length, workpiece_lengths = read_task(args.input)
     base_permutation = [item for item in range(len(workpiece_lengths))]
 
-    one_step_solver = OneStepSolver(workpiece_lengths,
+    greedy_solver = GreedySolver(workpiece_lengths,
                                     max_rod_length, strategies.BaseOneStepStrat(workpiece_lengths))
 
-    one_step_solver_custom = OneStepSolver(workpiece_lengths,
+    greedy_solver_custom = GreedySolver(workpiece_lengths,
                                     max_rod_length, strategies.CustomOneStepStrat(workpiece_lengths))
-    multi_step_solver = MultiStepSolver(workpiece_lengths,
+    iter_solver = IterSolver(workpiece_lengths,
                                         max_rod_length, len(workpiece_lengths), strategies.BaseMultiStepStrat())
-    multi_step_solver_custom = MultiStepSolver(workpiece_lengths,
+    iter_solver_custom = IterSolver(workpiece_lengths,
                                         max_rod_length, len(workpiece_lengths), strategies.CustomMultiStepStrat(workpiece_lengths))
 
-    one_step_solution, one_step_crit = one_step_solver.solve(base_permutation)
-    one_step_solution_custom, one_step_crit_custom = one_step_solver_custom.solve(base_permutation)
-    multi_step_solution, multi_step_crit = multi_step_solver.solve(base_permutation)
-    multi_step_solution_custom, multi_step_crit_custom = multi_step_solver_custom.solve(base_permutation)
+    greedy_solution, greedy_crit = greedy_solver.solve(base_permutation)
+    greedy_solution_custom, greedy_crit_custom = greedy_solver_custom.solve(base_permutation)
+    iter_solution, iter_crit = iter_solver.solve(base_permutation)
+    iter_solution_custom, iter_crit_custom = iter_solver_custom.solve(base_permutation)
 
-    print(f'One-step crit: {one_step_crit}')
-    print(f'One-step custom crit: {one_step_crit_custom}')
-    print(f'Multi-step crit: {multi_step_crit}')
-    print(f'Multi-step crit custom: {multi_step_crit_custom}')
+    print(f'Greedy crit: {greedy_crit}')
+    print(f'Greedy custom crit: {greedy_crit_custom}')
+    print(f'Iter crit: {iter_crit}')
+    print(f'Iter crit custom: {iter_crit_custom}')
 
 if __name__ == '__main__':
     main()

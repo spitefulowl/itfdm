@@ -3,16 +3,16 @@ import os
 import splitting_problem as sp
 
 PATH_TO_TASKS_DIR = os.path.join('tasks')
-CSV_HEADER = ["N" , "n", "one-step_base", "dev", "one-step_custom", "dev", "multi-step_base", "dev", "multi-step_custom", "dev", "lower bound"]
+CSV_HEADER = ["N" , "n", "greedy_base", "dev", "greedy_custom", "dev", "iter_base", "dev", "iter_custom", "dev", "lower bound"]
 FLOAT_LENGTH = 5
 
 if __name__ == '__main__':
     task_files = os.listdir(PATH_TO_TASKS_DIR)
 
-    one_step_base_dev = 0
-    one_step_custom_dev = 0
-    multi_step_base_dev = 0
-    multi_step_custom_dev = 0
+    greedy_base_dev = 0
+    greedy_custom_dev = 0
+    iter_base_dev = 0
+    iter_custom_dev = 0
 
     with open('result.csv', 'w') as _file:
         _file.write('sep=,\n')
@@ -26,35 +26,35 @@ if __name__ == '__main__':
             lower_bound = sp.utils.get_lower_bound(workpiece_lengths, max_rod_length)
             base_permutation = [item for item in range(len(workpiece_lengths))]
 
-            one_step_solver_base = sp.OneStepSolver(workpiece_lengths,
+            greedy_solver_base = sp.GreedySolver(workpiece_lengths,
                                         max_rod_length, sp.strategies.BaseOneStepStrat(workpiece_lengths))
-            one_step_solver_custom = sp.OneStepSolver(workpiece_lengths,
+            greedy_solver_custom = sp.GreedySolver(workpiece_lengths,
                                         max_rod_length, sp.strategies.CustomOneStepStrat(workpiece_lengths))
-            multi_step_solver_base = sp.MultiStepSolver(workpiece_lengths,
+            iter_solver_base = sp.IterSolver(workpiece_lengths,
                                                 max_rod_length, len(workpiece_lengths), sp.strategies.BaseMultiStepStrat())
-            multi_step_solver_custom = sp.MultiStepSolver(workpiece_lengths,
+            iter_solver_custom = sp.IterSolver(workpiece_lengths,
                                                 max_rod_length, len(workpiece_lengths), sp.strategies.CustomMultiStepStrat(workpiece_lengths))
 
-            one_step_solution_base, one_step_crit_base = one_step_solver_base.solve(base_permutation)
-            one_step_solution_custom, one_step_crit_custom = one_step_solver_custom.solve(base_permutation)
-            multi_step_solution_base, multi_step_crit_base = multi_step_solver_base.solve(base_permutation)
-            multi_step_solution_custom, multi_step_crit_custom = multi_step_solver_custom.solve(base_permutation)
+            greedy_solution_base, greedy_crit_base = greedy_solver_base.solve(base_permutation)
+            greedy_solution_custom, greedy_crit_custom = greedy_solver_custom.solve(base_permutation)
+            iter_solution_base, iter_crit_base = iter_solver_base.solve(base_permutation)
+            iter_solution_custom, iter_crit_custom = iter_solver_custom.solve(base_permutation)
 
-            cur_one_step_base_dev = sp.utils.get_deviation(one_step_crit_base, lower_bound)
-            cur_one_step_custom_dev = sp.utils.get_deviation(one_step_crit_custom, lower_bound)
-            cur_multi_step_base_dev = sp.utils.get_deviation(multi_step_crit_base, lower_bound)
-            cur_multi_step_custom_dev = sp.utils.get_deviation(multi_step_crit_custom, lower_bound)
+            cur_greedy_base_dev = sp.utils.get_deviation(greedy_crit_base, lower_bound)
+            cur_greedy_custom_dev = sp.utils.get_deviation(greedy_crit_custom, lower_bound)
+            cur_iter_base_dev = sp.utils.get_deviation(iter_crit_base, lower_bound)
+            cur_iter_custom_dev = sp.utils.get_deviation(iter_crit_custom, lower_bound)
 
-            _file.write(','.join([str(task_idx), str(len(workpiece_lengths)), str(one_step_crit_base), str(cur_one_step_base_dev)[:FLOAT_LENGTH],
-                        str(one_step_crit_custom), str(cur_one_step_custom_dev)[:FLOAT_LENGTH], str(multi_step_crit_base), str(cur_multi_step_base_dev)[:FLOAT_LENGTH],
-                        str(multi_step_crit_custom), str(cur_multi_step_custom_dev)[:FLOAT_LENGTH], str(lower_bound)]) + '\n')
+            _file.write(','.join([str(task_idx), str(len(workpiece_lengths)), str(greedy_crit_base), str(cur_greedy_base_dev)[:FLOAT_LENGTH],
+                        str(greedy_crit_custom), str(cur_greedy_custom_dev)[:FLOAT_LENGTH], str(iter_crit_base), str(cur_iter_base_dev)[:FLOAT_LENGTH],
+                        str(iter_crit_custom), str(cur_iter_custom_dev)[:FLOAT_LENGTH], str(lower_bound)]) + '\n')
             task_idx += 1
 
-            one_step_base_dev += cur_one_step_base_dev
-            one_step_custom_dev += cur_one_step_custom_dev
-            multi_step_base_dev += cur_multi_step_base_dev
-            multi_step_custom_dev += cur_multi_step_custom_dev
+            greedy_base_dev += cur_greedy_base_dev
+            greedy_custom_dev += cur_greedy_custom_dev
+            iter_base_dev += cur_iter_base_dev
+            iter_custom_dev += cur_iter_custom_dev
 
-        _file.write(','.join(['', '', '', str(one_step_base_dev / (task_idx - 1))[:FLOAT_LENGTH],
-                    '', str(one_step_custom_dev / (task_idx - 1))[:FLOAT_LENGTH], '',
-                    str(multi_step_base_dev / (task_idx - 1))[:FLOAT_LENGTH], '', str(multi_step_custom_dev / (task_idx - 1))[:FLOAT_LENGTH]]))
+        _file.write(','.join(['', '', '', str(greedy_base_dev / (task_idx - 1))[:FLOAT_LENGTH],
+                    '', str(greedy_custom_dev / (task_idx - 1))[:FLOAT_LENGTH], '',
+                    str(iter_base_dev / (task_idx - 1))[:FLOAT_LENGTH], '', str(iter_custom_dev / (task_idx - 1))[:FLOAT_LENGTH]]))

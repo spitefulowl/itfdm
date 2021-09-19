@@ -1,4 +1,4 @@
-class OneStepSolver():
+class GreedySolver():
     def __init__(self, workpiece_lengths, max_rod_length, strategy=None):
         self.workpiece_lengths = workpiece_lengths
         self.max_rod_length = max_rod_length
@@ -27,11 +27,11 @@ class OneStepSolver():
 
         return self._solution.copy(), len(self._rod_lengths)
 
-class MultiStepSolver():
+class IterSolver():
     def __init__(self, workpiece_lengths, max_rod_length, iters, strategy):
         self.iters = iters
         self.strategy = strategy
-        self._one_step_solver = OneStepSolver(workpiece_lengths, max_rod_length)
+        self._greedy_solver = GreedySolver(workpiece_lengths, max_rod_length)
 
     def solve(self, permutation):
         best_solution = []
@@ -39,7 +39,7 @@ class MultiStepSolver():
         current_solution = []
         for iter_number in range(self.iters):
             permutation = self.strategy.get(permutation, current_solution)
-            current_solution, current_crit = self._one_step_solver.solve(permutation)
+            current_solution, current_crit = self._greedy_solver.solve(permutation)
             if current_crit < best_crit:
                 best_crit = current_crit
                 best_solution = current_solution

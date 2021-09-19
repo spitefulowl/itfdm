@@ -57,6 +57,5 @@ class CustomMultiStepStrat():
             result_permutation.extend(large_wp_rods[-1])
 
         result_permutation = CustomOneStepStrat(self.workpiece_lengths).get(result_permutation)
-        # print(result_permutation)
         assert(len(result_permutation) == len(permutation))
         return result_permutation
