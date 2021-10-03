@@ -1,0 +1,36 @@
+from orders_task import OrdersTask
+
+class RecursiveSolver():
+    def __init__(self, task: OrdersTask):
+        self._my_permutation = None
+        self._my_task = task
+        self._my_cache = {}
+        pass
+
+    def _recursive_search(self, current_order, current_performance):
+        real_order = self._my_permutation[current_order]
+        intensity = self._my_task.labour_intensity[real_order]
+        est_profit = self._my_task.est_profit[real_order]
+
+        if current_order == 0:
+            return (est_profit, { real_order: True }) \
+                if intensity <= current_performance else (0, { real_order: False })
+
+        if intensity > current_performance:
+            res_est_profit, res_solution = self._recursive_search(current_order - 1, current_performance)
+            res_solution[real_order] = False
+            return res_est_profit, res_solution
+
+        left_est_profit, left_solution = self._recursive_search(current_order - 1, current_performance - intensity)
+        left_est_profit += est_profit
+        left_solution[real_order] = True
+
+        right_est_profit, right_solution = self._recursive_search(current_order - 1, current_performance)
+        right_solution[real_order] = False
+
+        return (left_est_profit, left_solution) if left_est_profit > right_est_profit \
+            else (right_est_profit, right_solution)
+
+    def solve(self, permutation):
+        self._my_permutation = permutation
+        return self._recursive_search(self._my_task.orders_number - 1, self._my_task.max_performance)
