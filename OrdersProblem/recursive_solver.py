@@ -22,13 +22,8 @@ class RecursiveSolver():
         est_profit = self._my_task.est_profit[real_order]
 
         if current_order == 0:
-            solution = [False] * self._my_task.orders_number
-            if intensity <= current_performance:
-                solution[real_order] = True
-                return (est_profit, solution)
-            else:
-                solution[real_order] = False
-                return (0, solution)
+            return (est_profit, { real_order: True }) \
+                if intensity <= current_performance else (0, { real_order: False })
 
         if intensity > current_performance:
             res_est_profit, res_solution = self._try_get_cached(current_order - 1, current_performance)
