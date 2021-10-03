@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from recursive_solver import RecursiveSolver
 from orders_task import OrdersTask
 
-sys.setrecursionlimit(1500)
+sys.setrecursionlimit(3000)
 
 def parse_arguments():
     parser = ArgumentParser()
