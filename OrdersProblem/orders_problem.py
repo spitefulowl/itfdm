@@ -28,11 +28,14 @@ def main():
     task = read_task(args.input)
     if task.orders_number < 20: print(task)
     base_permutation = [item for item in range(task.orders_number)]
-    # recursive_solver = RecursiveSolver(task)
-    recursive_solver = TableSolver(task)
+    recursive_solver = RecursiveSolver(task)
+    table_solver = TableSolver(task)
     recursive_crit, recursive_solution = recursive_solver.solve(base_permutation)
-    print(f'Crit: {recursive_crit}')
-    if task.orders_number < 20: print(f'Solution: {recursive_solution}')
+    table_crit, table_solution = table_solver.solve(base_permutation)
+    print(f'Recursive crit: {recursive_crit}')
+    if task.orders_number < 20: print(f'Recursive solution: {recursive_solution}')
+    print(f'Table crit: {table_crit}')
+    if task.orders_number < 20: print(f'Table solution: {table_solution}')
 
 if __name__ == "__main__":
     main()

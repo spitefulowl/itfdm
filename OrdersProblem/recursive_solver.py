@@ -12,7 +12,7 @@ class RecursiveSolver():
             cached_profit, cached_solution = self._recursive_search(current_order, current_performance)
             self._my_cache[(current_order, current_performance)] = (cached_profit, cached_solution)
 
-        return cached_profit, cached_solution
+        return cached_profit, cached_solution.copy()
 
     def _recursive_search(self, current_order, current_performance):
         real_order = self._my_permutation[current_order]
