@@ -4,6 +4,7 @@ class RecursiveSolver():
     def __init__(self, task: OrdersTask):
         self._my_permutation = None
         self._my_task = task
+        self._backup_size = None
         self._my_cache = {}
 
     def _try_get_cached(self, current_order, current_performance):
@@ -44,6 +45,13 @@ class RecursiveSolver():
         return (left_est_profit, left_solution) if left_est_profit > right_est_profit \
             else (right_est_profit, right_solution)
 
-    def solve(self, permutation):
+    def solve(self, permutation, max_size=None):
         self._my_permutation = permutation
-        return self._recursive_search(self._my_task.orders_number - 1, self._my_task.max_performance)
+        if max_size:
+            self._backup_size = self._my_task.orders_number
+            self._my_task.orders_number = max_size
+
+        crit, solution = self._recursive_search(self._my_task.orders_number - 1, self._my_task.max_performance)
+        if max_size: self._my_task.orders_number = self._backup_size
+
+        return crit, solution

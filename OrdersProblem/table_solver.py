@@ -4,9 +4,13 @@ class TableSolver():
     def __init__(self, task: OrdersTask):
         self._my_permutation = None
         self._my_task = task
+        self._backup_size = None
 
-    def solve(self, permutation):
+    def solve(self, permutation, max_size=None):
         self._my_permutation = permutation
+        if max_size:
+            self._backup_size = self._my_task.orders_number
+            self._my_task.orders_number = max_size
 
         real_first_idx = permutation[0]
         real_first_est = self._my_task.est_profit[real_first_idx]
@@ -57,4 +61,5 @@ class TableSolver():
                 second_column[current_performance][0] = second_option
                 second_column[current_performance][1] = first_column[current_performance][1].copy()
 
+        if max_size: self._my_task.orders_number = self._backup_size
         return second_column[-1]
