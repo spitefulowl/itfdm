@@ -5,7 +5,14 @@ class RecursiveSolver():
         self._my_permutation = None
         self._my_task = task
         self._my_cache = {}
-        pass
+
+    def _try_get_cached(self, current_order, current_performance):
+        cached_profit, cached_solution = self._my_cache.get((current_order, current_performance), (None, None))
+        if cached_profit is None:
+            cached_profit, cached_solution = self._recursive_search(current_order, current_performance)
+            self._my_cache[(current_order, current_performance)] = (cached_profit, cached_solution)
+
+        return cached_profit, cached_solution
 
     def _recursive_search(self, current_order, current_performance):
         real_order = self._my_permutation[current_order]
@@ -17,15 +24,15 @@ class RecursiveSolver():
                 if intensity <= current_performance else (0, { real_order: False })
 
         if intensity > current_performance:
-            res_est_profit, res_solution = self._recursive_search(current_order - 1, current_performance)
+            res_est_profit, res_solution = self._try_get_cached(current_order - 1, current_performance)
             res_solution[real_order] = False
             return res_est_profit, res_solution
 
-        left_est_profit, left_solution = self._recursive_search(current_order - 1, current_performance - intensity)
+        left_est_profit, left_solution = self._try_get_cached(current_order - 1, current_performance - intensity)
         left_est_profit += est_profit
         left_solution[real_order] = True
 
-        right_est_profit, right_solution = self._recursive_search(current_order - 1, current_performance)
+        right_est_profit, right_solution = self._try_get_cached(current_order - 1, current_performance)
         right_solution[real_order] = False
 
         return (left_est_profit, left_solution) if left_est_profit > right_est_profit \
