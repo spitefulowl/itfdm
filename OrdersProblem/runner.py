@@ -24,6 +24,7 @@ if __name__ == '__main__':
         _file.write('sep=,\n')
         _file.write(','.join(CSV_HEADER) + '\n')
         task_idx = 1
+
         for task_file in task_files:
             print(f'Working with {task_file}...')
             path_to_task = os.path.join(PATH_TO_TASKS_DIR, task_file)

@@ -63,5 +63,7 @@ class TableSolver():
             if idx not in second_column[current_performance][1].keys():
                 second_column[current_performance][1][idx] = False
 
-        if max_size: self._my_task.orders_number = self._backup_size
+        if max_size:
+            self._my_task.orders_number = self._backup_size
+
         return second_column[-1]
