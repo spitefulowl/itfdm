@@ -12,7 +12,8 @@ class RecursiveSolver():
             cached_profit, cached_solution = self._recursive_search(current_order, current_performance)
             self._my_cache[(current_order, current_performance)] = (cached_profit, cached_solution)
 
-        return cached_profit, cached_solution.copy()
+        return (cached_profit, cached_solution.copy()) \
+            if self._my_task.orders_number < 100 else (cached_profit, cached_solution)
 
     def _recursive_search(self, current_order, current_performance):
         real_order = self._my_permutation[current_order]
@@ -20,8 +21,13 @@ class RecursiveSolver():
         est_profit = self._my_task.est_profit[real_order]
 
         if current_order == 0:
-            return (est_profit, { real_order: True }) \
-                if intensity <= current_performance else (0, { real_order: False })
+            solution = [False] * self._my_task.orders_number
+            if intensity <= current_performance:
+                solution[real_order] = True
+                return (est_profit, solution)
+            else:
+                solution[real_order] = False
+                return (0, solution)
 
         if intensity > current_performance:
             res_est_profit, res_solution = self._try_get_cached(current_order - 1, current_performance)

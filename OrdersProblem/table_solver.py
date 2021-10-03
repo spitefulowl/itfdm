@@ -15,12 +15,13 @@ class TableSolver():
         second_column = []
         for current_performance in range(self._my_task.max_performance):
             append_profit = real_first_est if real_first_intensity <= current_performance + 1 else 0
-            append_solution = { real_first_idx: True } if real_first_intensity <= current_performance + 1 else { real_first_idx: False }
-            second_column.append([append_profit, append_solution])
+            solution = [False] * self._my_task.orders_number
+            solution[real_first_idx] = True if real_first_intensity <= current_performance + 1 else False
+            second_column.append([append_profit, solution])
 
         first_column = [None] * self._my_task.max_performance
         for idx in range(len(first_column)):
-            first_column[idx] = [0, {}]
+            first_column[idx] = [0, [False] * self._my_task.orders_number]
 
         for column_idx in range(1, self._my_task.orders_number):
             tmp = second_column
@@ -36,11 +37,12 @@ class TableSolver():
                     second_option = first_column[current_performance][0]
                     if first_option > second_option:
                         second_column[current_performance][0] = first_option
-                        second_column[current_performance][1] = { real_order: True }
+                        solution = [False] * self._my_task.orders_number
+                        solution[real_order] = True
+                        second_column[current_performance][1] = solution
                     else:
                         second_column[current_performance][0] = second_option
-                        second_column[current_performance][1].clear()
-                        second_column[current_performance][1].update(first_column[current_performance][1])
+                        second_column[current_performance][1] = first_column[current_performance][1].copy()
                     continue
 
                 second_option = first_column[current_performance][0]
@@ -49,14 +51,10 @@ class TableSolver():
                     first_option = first_column[current_performance - intensity][0] + est_profit
                     if first_option > second_option:
                         second_column[current_performance][0] = first_option
-                        second_column[current_performance][1].update(first_column[current_performance - intensity][1])
-                        second_column[current_performance][1].update({ real_order: True })
+                        second_column[current_performance][1] = first_column[current_performance - intensity][1].copy()
+                        second_column[current_performance][1][real_order] = True
                         continue
                 second_column[current_performance][0] = second_option
-                second_column[current_performance][1].update(first_column[current_performance][1])
-
-        for idx in range(0, self._my_task.orders_number):
-            if idx not in second_column[current_performance][1].keys():
-                second_column[current_performance][1][idx] = False
+                second_column[current_performance][1] = first_column[current_performance][1].copy()
 
         return second_column[-1]
