@@ -37,5 +37,11 @@ def main():
     print(f'Table crit: {table_crit}')
     if task.orders_number < 20: print(f'Table solution: {table_solution}')
 
+    my_sum = 0
+    for item in table_solution.keys():
+        if table_solution[item]:
+            my_sum += task.labour_intensity[item]
+    print(my_sum)
+
 if __name__ == "__main__":
     main()

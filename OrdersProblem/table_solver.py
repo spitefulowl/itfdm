@@ -4,7 +4,6 @@ class TableSolver():
     def __init__(self, task: OrdersTask):
         self._my_permutation = None
         self._my_task = task
-        self._my_cache = {}
 
     def solve(self, permutation):
         self._my_permutation = permutation
@@ -44,17 +43,17 @@ class TableSolver():
                         second_column[current_performance][1].update(first_column[current_performance][1])
                     continue
 
+                second_option = first_column[current_performance][0]
+                second_column[current_performance][1].clear()
                 if intensity < current_performance + 1:
                     first_option = first_column[current_performance - intensity][0] + est_profit
-                    second_option = first_column[current_performance][0]
-                    second_column[current_performance][1].clear()
                     if first_option > second_option:
                         second_column[current_performance][0] = first_option
                         second_column[current_performance][1].update(first_column[current_performance - intensity][1])
                         second_column[current_performance][1].update({ real_order: True })
                         continue
-                    second_column[current_performance][0] = second_option
-                    second_column[current_performance][1].update(first_column[current_performance][1])
+                second_column[current_performance][0] = second_option
+                second_column[current_performance][1].update(first_column[current_performance][1])
 
         for idx in range(0, self._my_task.orders_number):
             if idx not in second_column[current_performance][1].keys():
