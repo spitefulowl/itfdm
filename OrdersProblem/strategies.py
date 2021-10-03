@@ -4,16 +4,19 @@ class BaseStrat():
     @staticmethod
     def get_permutation(task: OrdersTask):
         permutation = [idx for idx in range(task.orders_number)]
-        return sorted(permutation, key=lambda x: task.labour_intensity[x] / (task.est_profit[x] + 1), reverse=False)
+        est_profit = []
+        for profit in task.est_profit:
+            if profit == 0: est_profit.append(0.000001)
+            else: est_profit.append(profit)
+        return sorted(permutation, key=lambda x: task.labour_intensity[x] / (est_profit[x]), reverse=False)
 
 class CustomStrat():
     @staticmethod
     def get_permutation(task: OrdersTask):
         permutation = BaseStrat.get_permutation(task)
-        permutation = sorted(permutation[:int(len(permutation) / 2)], key=lambda x: task.labour_intensity[x], reverse=False)
         avg_profit = sum(task.est_profit) / len(task.est_profit)
         result_permutation = []
-        for item in permutation:
+        for item in permutation[:int(len(permutation) / 2)]:
             if task.est_profit[item] > avg_profit:
                 result_permutation.insert(0, item)
             else:
