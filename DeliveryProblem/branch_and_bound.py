@@ -2,7 +2,7 @@ from utils import get_descendants
 
 class BranchAndBound():
     @staticmethod
-    def check_vertices(current_vertices, lower_bound, upper_bound):
+    def _check_vertices(current_vertices, lower_bound, upper_bound):
         min_upper_bound = upper_bound.task.size
         for item in current_vertices:
             current_upper_bound = upper_bound.get(item)[0]
@@ -34,10 +34,10 @@ class BranchAndBound():
                     break
 
             current_vertex = strategy.get(current_vertices)
-            current_vertices -= set([current_vertex])
+            current_vertices.discard(current_vertex)
             descendants = get_descendants(size, current_vertex)
             current_vertices.update([current_vertex + (descendant,) for descendant in descendants])
-            BranchAndBound.check_vertices(current_vertices, lower_bound, upper_bound)
+            BranchAndBound._check_vertices(current_vertices, lower_bound, upper_bound)
             iterations += 1
 
         return solution, iterations

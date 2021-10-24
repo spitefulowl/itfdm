@@ -8,8 +8,12 @@ INT_MAX = 999999999
 class BaseUpperBound():
     def __init__(self, task: DeliveryTask):
         self.task = task
+        self._my_cache = {}
 
     def get(self, vertex):
+        if self._my_cache.get(vertex):
+            return self._my_cache.get(vertex)
+
         descendants = get_descendants(self.task.size, vertex)
         base_size = len(vertex)
         current_solution = vertex
@@ -42,6 +46,9 @@ class BaseUpperBound():
                 crit = self.task.size - len(current_solution)
             else:
                 current_solution += tuple(descendants)
-                return (get_crit(self.task, current_solution), current_solution)
+                crit = get_crit(self.task, current_solution)
+                self._my_cache[vertex] = (crit, current_solution)
+                return (crit, current_solution)
 
+        self._my_cache[vertex] = (crit, current_solution)
         return (crit, current_solution)
