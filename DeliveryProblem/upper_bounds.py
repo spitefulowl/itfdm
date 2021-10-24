@@ -19,7 +19,9 @@ class BaseUpperBound():
         base_size = len(vertex)
         current_solution = vertex
 
-        crit = self.task.size
+        if len(vertex) == self.task.size:
+            return (get_crit(self.task, vertex), vertex)
+
         currrent_time = get_time(self.task, vertex)
 
         for idx in range(self.task.size - base_size):
