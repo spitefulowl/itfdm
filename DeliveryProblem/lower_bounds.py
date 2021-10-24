@@ -9,8 +9,10 @@ class BaseLowerBound():
         self._my_cache = {}
 
     def get(self, vertex):
-        if self._my_cache.get(vertex):
-            return self._my_cache.get(vertex)
+        cached_value = self._my_cache.get(vertex)
+        if cached_value:
+            return cached_value
+
         current_crit = get_crit(self.task, vertex)
         current_time = get_time(self.task, vertex)
         descendants = get_descendants(self.task.size, vertex)
