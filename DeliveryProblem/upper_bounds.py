@@ -1,6 +1,7 @@
 from delivery_task import DeliveryTask
 from utils import get_descendants
 from utils import get_time
+from utils import get_crit
 
 INT_MAX = 999999999
 
@@ -40,6 +41,7 @@ class BaseUpperBound():
                 descendants.remove(min_descendant)
                 crit = self.task.size - len(current_solution)
             else:
-                return (self.task.size, current_solution)
+                current_solution += tuple(descendants)
+                return (get_crit(self.task, current_solution), current_solution)
 
         return (crit, current_solution)
