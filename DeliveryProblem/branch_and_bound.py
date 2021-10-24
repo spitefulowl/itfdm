@@ -23,6 +23,7 @@ class BranchAndBound():
         current_vertices = set()
         current_lower_bound = 0
         current_upper_bound = size
+        iterations = 0
         while True:
             if len(current_vertices) == 1:
                 solution = current_vertices.pop()
@@ -37,5 +38,6 @@ class BranchAndBound():
             descendants = get_descendants(size, current_vertex)
             current_vertices.update([current_vertex + (descendant,) for descendant in descendants])
             BranchAndBound.check_vertices(current_vertices, lower_bound, upper_bound)
+            iterations += 1
 
-        return solution
+        return solution, iterations

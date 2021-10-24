@@ -39,8 +39,9 @@ def main():
     upper_bound = ub.BaseUpperBound(task)
     strategy = tt.BreadthFirst()
 
-    solution = BranchAndBound.solve(task.size, strategy, lower_bound, upper_bound)
+    solution, iterations = BranchAndBound.solve(task.size, strategy, lower_bound, upper_bound)
     print(solution, get_crit(task, solution))
+    print(f'Iterations: {iterations}')
 
 if __name__ == "__main__":
     main()
