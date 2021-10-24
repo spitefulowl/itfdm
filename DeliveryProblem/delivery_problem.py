@@ -3,6 +3,12 @@ import numpy as np
 from argparse import ArgumentParser
 
 from delivery_task import DeliveryTask
+from branch_and_bound import BranchAndBound
+from utils import get_crit
+
+import lower_bounds as lb
+import upper_bounds as ub
+import tree_traversals as tt
 
 def parse_arguments():
     parser = ArgumentParser()
@@ -28,6 +34,13 @@ def main():
     task = read_task(args.input)
     if task.size < 10:
         print(task)
+
+    lower_bound = lb.BaseLowerBound(task)
+    upper_bound = ub.BaseUpperBound(task)
+    strategy = tt.BreadthFirst()
+
+    solution = BranchAndBound.solve(task.size, strategy, lower_bound, upper_bound)
+    print(solution, get_crit(task, solution))
 
 if __name__ == "__main__":
     main()
