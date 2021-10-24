@@ -9,4 +9,4 @@ class BreadthFirst():
         #     print('FATAL: not solution')
         #     exit(-1)
 
-        return min(current_vertices, key=lambda x: len(x))
+        return current_vertices[0]

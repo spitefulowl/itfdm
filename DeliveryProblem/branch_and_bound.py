@@ -31,11 +31,11 @@ class BranchAndBound():
         for descendant in descendants:
             current_new_vertex = current_vertex + (descendant,)
             if lower_bound.get(current_new_vertex) < min_upper_bound or min_upper_bound_item == current_new_vertex:
-                current_vertices.add(current_new_vertex)
+                current_vertices.append(current_new_vertex)
 
     @staticmethod
     def solve(size, strategy, lower_bound, upper_bound):
-        current_vertices = set()
+        current_vertices = list()
         current_lower_bound = 0
         current_upper_bound = size
         iterations = 0
@@ -49,7 +49,8 @@ class BranchAndBound():
                     break
 
             current_vertex = strategy.get(current_vertices)
-            current_vertices.discard(current_vertex)
+            if current_vertex in current_vertices:
+                current_vertices.remove(current_vertex)
             descendants = get_descendants(size, current_vertex)
             BranchAndBound._check_vertices(current_vertices, current_vertex, descendants, lower_bound, upper_bound)
             iterations += 1

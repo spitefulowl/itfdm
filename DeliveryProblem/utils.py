@@ -11,14 +11,7 @@ def get_time(task, vertex):
 
     return time
 
-# global_crit_cache = {}
-
 def get_crit(task, vertex):
-    # global global_crit_cache
-    # cached_value = global_crit_cache.get(vertex)
-    # if cached_value:
-    #     return cached_value
-
     result = 0
     time = task.delivery_matrix[0, vertex[0]]
     if time > task.target_dates[vertex[0] - 1]:
@@ -29,5 +22,4 @@ def get_crit(task, vertex):
         if time > task.target_dates[vertex[idx] - 1]:
             result += 1
 
-    # global_crit_cache[vertex] = result
     return result
