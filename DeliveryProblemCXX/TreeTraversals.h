@@ -10,10 +10,10 @@ public:
 class BreadthFirstTraversal : public Traversal {
 	virtual Vertex get(std::list<Vertex>& vertices) override {
 		if (vertices.size() == 0) {
-			return Vertex{};
+			return std::move(Vertex{});
 		}
-		auto result = vertices.front();
+		Vertex result = std::move(vertices.front());
 		vertices.pop_front();
-		return result;
+		return std::move(result);
 	}
 };

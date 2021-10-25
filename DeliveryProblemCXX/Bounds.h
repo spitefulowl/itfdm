@@ -33,5 +33,5 @@ public:
 	virtual std::size_t get(Vertex& vertex, std::size_t additional_destination = 0) override;
 private:
 	Task& my_task;
-	std::unordered_map<std::string, solution> my_cache{};
+	std::unordered_map<std::string, std::size_t> my_cache{};
 };

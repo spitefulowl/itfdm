@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
+#include <numeric>
 #include "Task.h"
 
 inline std::size_t get_descendants_mask(std::vector<std::size_t>& vertex) {
 	std::size_t mask = static_cast<std::size_t>(-1);
 	for (auto&& elem : vertex) {
-		mask ^= 1 << (elem - 1);
+		mask ^= 1llu << (elem - 1);
 	}
 	return mask;
 }
@@ -42,8 +43,16 @@ inline std::size_t get_crit(Task& task, Vertex& vertex, std::size_t additional_d
 
 inline void insert_by_mask(std::vector<std::size_t>& my_vector, std::size_t mask, std::size_t size) {
 	for (std::size_t idx = 0; idx < size; ++idx) {
-		if (mask & 1 << idx) {
+		if (mask & 1llu << idx) {
 			my_vector.push_back(idx + 1);
 		}
 	}
 }
+//
+//std::string string_cast(std::vector<std::size_t>& input) {
+//	std::string result;
+//	for (auto&& elem : input) {
+//		result += std::to_string(elem);
+//	}
+//	return result;
+//}
