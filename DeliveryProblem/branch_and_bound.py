@@ -1,14 +1,12 @@
 from utils import get_descendants
 
 min_upper_bound = 9999999
-min_upper_bound_updated = False
 min_upper_bound_item = None
 
 class BranchAndBound():
     @staticmethod
     def _check_vertices(current_vertices, current_vertex, descendants, lower_bound, upper_bound):
         global min_upper_bound
-        global min_upper_bound_updated
         global min_upper_bound_item
         min_upper_bound_updated = False
         for descendant in descendants:
