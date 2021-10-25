@@ -2,13 +2,15 @@
 
 BaseUpperBound::BaseUpperBound(Task& task) : my_task(task) { }
 
-solution BaseUpperBound::get(Vertex& vertex) {
+solution BaseUpperBound::get(Vertex& vertex, std::size_t additional_destination) {
+	if (additional_destination != 0) vertex.push_back(additional_destination);
 	std::size_t descendants_mask = get_descendants_mask(vertex);
 	std::size_t base_size = vertex.size();
 	std::size_t task_size = this->my_task.size();
 	std::vector<std::size_t> current_solution = vertex;
 
 	if (base_size == task_size) {
+		if (additional_destination != 0) vertex.pop_back();
 		return std::make_pair(vertex, get_crit(this->my_task, vertex));
 	}
 
@@ -47,16 +49,19 @@ solution BaseUpperBound::get(Vertex& vertex) {
 		else {
 			insert_by_mask(current_solution, descendants_mask, task_size);
 			std::size_t crit = get_crit(this->my_task, current_solution);
+			if (additional_destination != 0) vertex.pop_back();
 			return std::make_pair(std::move(current_solution), crit);
 		}
 	}
 	std::size_t crit = get_crit(this->my_task, current_solution);
+	if (additional_destination != 0) vertex.pop_back();
 	return std::make_pair(std::move(current_solution), crit);
 }
 
 BaseLowerBound::BaseLowerBound(Task& task) : my_task(task) { }
 
-std::size_t BaseLowerBound::get(Vertex& vertex) {
+std::size_t BaseLowerBound::get(Vertex& vertex, std::size_t additional_destination) {
+	if (additional_destination != 0) vertex.push_back(additional_destination);
 	std::size_t current_crit = get_crit(this->my_task, vertex);
 	std::size_t current_time = get_time(this->my_task, vertex);
 	std::size_t descendants_mask = get_descendants_mask(vertex);
@@ -70,5 +75,7 @@ std::size_t BaseLowerBound::get(Vertex& vertex) {
 			}
 		}
 	}
+
+	if (additional_destination != 0) vertex.pop_back();
 	return current_crit;
 }

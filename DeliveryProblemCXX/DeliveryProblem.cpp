@@ -2,19 +2,23 @@
 //
 
 #include <iostream>
-#include "Task.h"
-#include "Bounds.h"
+#include "BranchAndBounds.h"
 
 int main(int argc, char* argv[])
 {
-	Task task("Task2/task_2_01_n3.txt");
-	BaseUpperBound bound(task);
-	std::vector<std::size_t> my_vector = { 3 };
-	auto result = bound.get(my_vector);
+	Task task(argv[1]);
+	BaseLowerBound lower_bound(task);
+	BaseUpperBound upper_bound(task);
+	BranchAndBound algorithm(task);
+
+	BreadthFirstTraversal traversal{};
+	auto&& result = algorithm.solve(traversal, lower_bound, upper_bound);
+	std::cout << "Iterations: " << result.second << std::endl;
+	std::cout << "Solution: ";
 	for (auto& elem : result.first) {
 		std::cout << elem << " ";
 	}
 	std::cout << std::endl;
-	std::cout << result.second << std::endl;
+	std::cout << "Crit: " << get_crit(task, result.first) << std::endl;
 	return 0;
 }
