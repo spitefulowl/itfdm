@@ -3,8 +3,8 @@
 #include <utility>
 #include <vector>
 #include <sparsehash/dense_hash_map>
-#include "Task.h"
-#include "Utils.h"
+#include "task.h"
+#include "utils.h"
 
 class UpperBound {
 public:

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TreeTraversals.h"
-#include "Bounds.h"
+#include "tree_traversals.h"
+#include "bounds.h"
 #include <deque>
 
 class BranchAndBound {

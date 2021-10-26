@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <numeric>
-#include "Task.h"
+#include "task.h"
 
 inline std::size_t get_descendants_mask(std::vector<std::size_t>& vertex) {
 	std::size_t mask = static_cast<std::size_t>(-1);

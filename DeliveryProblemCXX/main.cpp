@@ -2,7 +2,7 @@
 //
 
 #include <iostream>
-#include "BranchAndBounds.h"
+#include "branch_and_bounds.h"
 
 int main(int argc, char* argv[])
 {
