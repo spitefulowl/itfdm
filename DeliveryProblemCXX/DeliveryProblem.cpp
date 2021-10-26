@@ -7,7 +7,7 @@
 int main(int argc, char* argv[])
 {
 	Task task(argv[1]);
-	//Task task("../Task2/task_2_07_n15.txt");
+	//Task task("../Task2/task_2_09_n50.txt");
 	BaseLowerBound lower_bound(task);
 	BaseUpperBound upper_bound(task);
 	BranchAndBound algorithm(task);

@@ -118,7 +118,7 @@ std::size_t BaseLowerBound::get(Vertex& vertex, std::size_t additional_destinati
 		vertex.pop_back();
 	}
 	else {
-		//this->my_cache[key] = current_crit;
+		this->my_cache[key] = current_crit;
 	}
 	return current_crit;
 }
