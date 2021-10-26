@@ -1,16 +1,18 @@
 #pragma once
 #include "Task.h"
-#include <list>
+#include <deque>
 
 class Traversal {
 public:
-	virtual Vertex get(std::list<Vertex>& vertices) = 0;
+	virtual Vertex get(std::deque<Vertex>& vertices) = 0;
 };
 
 class BreadthFirstTraversal : public Traversal {
-	virtual Vertex get(std::list<Vertex>& vertices) override {
+	virtual Vertex get(std::deque<Vertex>& vertices) override {
 		if (vertices.size() == 0) {
-			return std::move(Vertex{});
+			Vertex my_vertex{};
+			my_vertex.reserve(15);
+			return std::move(my_vertex);
 		}
 		Vertex result = std::move(vertices.front());
 		vertices.pop_front();

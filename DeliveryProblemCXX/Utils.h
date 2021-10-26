@@ -11,18 +11,27 @@ inline std::size_t get_descendants_mask(std::vector<std::size_t>& vertex) {
 	return mask;
 }
 
-inline std::size_t get_time(Task& task, Vertex& vertex) {
-	std::size_t time = task.get_delivery_time(0, vertex[0]);
+inline std::size_t get_time(Task& task, Vertex& vertex, std::size_t additional_destination = 0) {
+	std::size_t first_vertex = vertex.size() == 0 ? additional_destination : vertex[0];
+
+
+	std::size_t time = task.get_delivery_time(0, first_vertex);
 	for (std::size_t idx = 1; idx < vertex.size(); ++idx) {
 		time += task.get_delivery_time(vertex[idx - 1], vertex[idx]);
 	}
+
+	if (additional_destination != 0 && vertex.size() != 0) {
+		time += task.get_delivery_time(vertex[vertex.size() - 1], additional_destination);
+	}
+
 	return time;
 }
 
 inline std::size_t get_crit(Task& task, Vertex& vertex, std::size_t additional_destination = 0) {
 	std::size_t result = 0;
-	std::size_t time = task.get_delivery_time(0, vertex[0]);
-	if (time > task.get_target_date(vertex[0] - 1)) ++result;
+	std::size_t first_vertex = vertex.size() == 0 ? additional_destination : vertex[0];
+	std::size_t time = task.get_delivery_time(0, first_vertex);
+	if (time > task.get_target_date(first_vertex - 1)) ++result;
 
 	for (std::size_t idx = 1; idx < vertex.size(); ++idx) {
 		time += task.get_delivery_time(vertex[idx - 1], vertex[idx]);
@@ -31,7 +40,7 @@ inline std::size_t get_crit(Task& task, Vertex& vertex, std::size_t additional_d
 		}
 	}
 
-	if (additional_destination != 0) {
+	if (additional_destination != 0 && vertex.size() != 0) {
 		time += task.get_delivery_time(vertex[vertex.size() - 1], additional_destination);
 		if (time > task.get_target_date(additional_destination - 1)) {
 			result += 1;
@@ -48,11 +57,3 @@ inline void insert_by_mask(std::vector<std::size_t>& my_vector, std::size_t mask
 		}
 	}
 }
-//
-//std::string string_cast(std::vector<std::size_t>& input) {
-//	std::string result;
-//	for (auto&& elem : input) {
-//		result += std::to_string(elem);
-//	}
-//	return result;
-//}
