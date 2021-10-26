@@ -32,15 +32,3 @@ Task::Task(std::string filename) {
 		}
 	}
 }
-
-const std::size_t& Task::get_target_date(std::size_t order) {
-	return this->target_dates[order];
-}
-
-const std::size_t& Task::get_delivery_time(std::size_t from, std::size_t to) {
-	return this->delivery_matrix[from * (this->my_size + 1) + to];
-}
-
-const std::size_t& Task::size() {
-	return this->my_size;
-}
