@@ -3,8 +3,8 @@
 
 int main(int argc, char* argv[])
 {
-	//Task task(argv[1]);
-	Task task("../Task2/task_2_09_n50.txt");
+	Task task(argv[1]);
+	//Task task("../Task2/task_2_09_n50.txt");
 	//if (std::strcmp(argv[2], "base") == 0) {
 	if (std::strcmp("base", "base") == 0) {
 		CustomLowerBound lower_bound(task);

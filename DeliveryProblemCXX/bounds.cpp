@@ -99,6 +99,10 @@ std::size_t CustomUpperBound::get(Vertex& vertex, std::size_t additional_destina
 		return this->my_cache[key];
 	}
 	std::size_t base_crit = this->my_base_bound.get(vertex, additional_destination);
+	Vertex* vertex_copy = nullptr;
+	if (save_result) {
+		vertex_copy = new Vertex(vertex);
+	}
 
 	std::size_t base_size = vertex.size();
 	std::size_t task_size = this->my_task.size();
@@ -133,9 +137,9 @@ std::size_t CustomUpperBound::get(Vertex& vertex, std::size_t additional_destina
 		std::size_t min_descendant = 0;
 		for (std::size_t possible_descendant = 0; possible_descendant < task_size; ++possible_descendant) {
 			if (descendants_mask & (1llu << possible_descendant)) {
-				std::size_t current_time = this->my_task.get_delivery_time(descendant_prev, possible_descendant + 1);
-				if (min_time > current_time) {
-					min_time = current_time;
+				std::size_t time = this->my_task.get_delivery_time(descendant_prev, possible_descendant + 1);
+				if (min_time > time) {
+					min_time = time;
 					min_descendant = possible_descendant;
 				}
 			}
@@ -154,7 +158,8 @@ std::size_t CustomUpperBound::get(Vertex& vertex, std::size_t additional_destina
 	if (base_crit < current_crit) {
 		current_crit = base_crit;
 		if (save_result) {
-			this->my_base_bound.get(vertex, additional_destination, true);
+			this->my_base_bound.get(*vertex_copy, additional_destination, true);
+			vertex = *vertex_copy;
 		}
 	}
 	if (additional_destination == 0) this->my_cache[key] = current_crit;
