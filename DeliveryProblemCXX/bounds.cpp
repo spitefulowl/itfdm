@@ -195,11 +195,57 @@ std::size_t BaseLowerBound::get(Vertex& vertex, std::size_t additional_destinati
 	return current_crit;
 }
 
-CustomLowerBound::CustomLowerBound(Task& task) : my_task(task) {
+CustomLowerBound::CustomLowerBound(Task& task) : my_task(task), my_base_bound(BaseLowerBound(task)) {
 	this->my_cache.set_empty_key(0);
 }
 
 std::size_t CustomLowerBound::get(Vertex& vertex, std::size_t additional_destination) {
-	
-	return 0;
+	if (additional_destination != 0) vertex.push_back(additional_destination);
+	std::size_t key = vertex.get_id();
+	if (this->my_cache.find(key) != this->my_cache.end() && additional_destination == 0) {
+		return this->my_cache[key];
+	}
+
+	std::size_t current_crit = get_crit(this->my_task, vertex);
+	std::size_t current_time = get_time(this->my_task, vertex);
+	std::size_t descendants_mask = get_descendants_mask(vertex);
+	std::size_t task_size = this->my_task.size();
+	std::size_t base_size = vertex.size();
+
+	std::size_t prev_vertex_idx = vertex[base_size - 1];
+
+	for (std::size_t idx = 0; idx < task_size - base_size; ++idx) {
+		std::size_t min_time = INT_MAX;
+		std::size_t max_time = 0;
+		std::size_t max_vertex_idx = 0;
+		for (std::size_t possible_descendant = 0; possible_descendant < task_size; ++possible_descendant) {
+			std::size_t time = this->my_task.get_delivery_time(prev_vertex_idx, possible_descendant + 1);
+			if (time < min_time) {
+				min_time = time;
+			}
+			if (descendants_mask & (1llu << possible_descendant)) {
+				if (max_time < time) {
+					max_time = time;
+					max_vertex_idx = possible_descendant;
+				}
+			}
+		}
+		prev_vertex_idx = max_vertex_idx + 1;
+		current_time += min_time;
+		if (this->my_task.get_target_date(max_vertex_idx) < current_time) {
+			current_crit += 1;
+		}
+	}
+	std::size_t base_crit = this->my_base_bound.get(vertex);
+	if (base_crit > current_crit) {
+		current_crit = base_crit;
+	}
+
+	if (additional_destination != 0) {
+		vertex.pop_back();
+	}
+	else {
+		this->my_cache[key] = current_crit;
+	}
+	return current_crit;
 }

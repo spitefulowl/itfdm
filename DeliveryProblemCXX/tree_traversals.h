@@ -34,7 +34,7 @@ public:
 			if (cur_iter->size() == this->max_size) {
 				continue;
 			}
-			double current_ratio = ((double)this->lower_bound.get(*cur_iter) / (double)this->upper_bound.get(*cur_iter));
+			double current_ratio = ((double)this->upper_bound.get(*cur_iter) / (double)this->lower_bound.get(*cur_iter));
 			if (current_ratio > ratio) {
 				ratio = current_ratio;
 				best_iter = cur_iter;
