@@ -25,18 +25,19 @@ public:
 			}
 
 			Vertex current_vertex = std::move(strategy.get(current_vertices));
-			check_vertices(current_vertices, current_vertex, lower_bound, upper_bound);
-			++iterations;
+			iterations += check_vertices(current_vertices, current_vertex, lower_bound, upper_bound);
 		}
 	}
 
 private:
-	void check_vertices(std::deque<Vertex>& current_vertices, Vertex& current_vertex, LowerBound& lower_bound, UpperBound& upper_bound) {
+	std::size_t check_vertices(std::deque<Vertex>& current_vertices, Vertex& current_vertex, LowerBound& lower_bound, UpperBound& upper_bound) {
+		std::size_t my_iterations = 0;
 		std::size_t task_size = this->my_task.size();
 		std::size_t descendants_mask = get_descendants_mask(current_vertex);
 		std::size_t min_uppper_bound_dest_idx = 0;
 		for (std::size_t possible_descendant = 0; possible_descendant < task_size; ++possible_descendant) {
 			if (descendants_mask & (1llu << possible_descendant)) {
+				++my_iterations;
 				std::size_t current_upper_bound = upper_bound.get(current_vertex, possible_descendant + 1);
 				if (current_upper_bound <= min_upper_bound) {
 					min_uppper_bound_dest_idx = possible_descendant + 1;
@@ -61,6 +62,7 @@ private:
 				}
 			}
 		}
+		return my_iterations;
 	}
 
 	std::size_t min_upper_bound = INT_MAX;
