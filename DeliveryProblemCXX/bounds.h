@@ -33,3 +33,12 @@ private:
 	Task& my_task;
 	google::dense_hash_map<std::size_t, std::size_t> my_cache{};
 };
+
+class CustomLowerBound : public LowerBound {
+public:
+	CustomLowerBound(Task& task);
+	virtual std::size_t get(Vertex& vertex, std::size_t additional_destination = 0) override;
+private:
+	Task& my_task;
+	google::dense_hash_map<std::size_t, std::size_t> my_cache{};
+};

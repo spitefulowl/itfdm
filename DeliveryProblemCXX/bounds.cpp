@@ -122,3 +122,11 @@ std::size_t BaseLowerBound::get(Vertex& vertex, std::size_t additional_destinati
 	}
 	return current_crit;
 }
+
+CustomLowerBound::CustomLowerBound(Task& task) : my_task(task) {
+	this->my_cache.set_empty_key(0);
+}
+
+std::size_t CustomLowerBound::get(Vertex& vertex, std::size_t additional_destination) {
+	return 0;
+}
