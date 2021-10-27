@@ -64,6 +64,7 @@ def main():
             process = subprocess.run(f"{args.binary} {args.tasks}/{file} {algo}", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             parsed_result = parse_output(process.stdout) + (TASK_SIZE_PATTERN.search(file).group(1),)
             results[algo][file] = parsed_result
-
+            print(parsed_result)
+    print(results)
 if __name__ == "__main__":
     main()

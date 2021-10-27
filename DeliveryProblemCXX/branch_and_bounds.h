@@ -9,7 +9,7 @@ public:
 	BranchAndBound(Task& task) : my_task(task) {}
 
 	std::pair<Vertex, std::size_t> solve(Traversal& strategy, LowerBound& lower_bound, UpperBound& upper_bound) {
-		std::deque<Vertex> current_vertices{};
+		std::list<Vertex> current_vertices{};
 		std::size_t iterations = 0;
 
 		while (true) {
@@ -30,7 +30,7 @@ public:
 	}
 
 private:
-	std::size_t check_vertices(std::deque<Vertex>& current_vertices, Vertex& current_vertex, LowerBound& lower_bound, UpperBound& upper_bound) {
+	std::size_t check_vertices(std::list<Vertex>& current_vertices, Vertex& current_vertex, LowerBound& lower_bound, UpperBound& upper_bound) {
 		std::size_t my_iterations = 0;
 		std::size_t task_size = this->my_task.size();
 		std::size_t descendants_mask = get_descendants_mask(current_vertex);
@@ -48,7 +48,8 @@ private:
 
 		if (min_uppper_bound_dest_idx != 0) {
 			auto& remove_begin = std::remove_if(current_vertices.begin(), current_vertices.end(), [&](auto& elem) {
-				return lower_bound.get(elem) >= min_upper_bound;
+				auto lower = lower_bound.get(elem);
+				return lower >= min_upper_bound;
 			});
 			current_vertices.erase(remove_begin, current_vertices.end());
 		}
