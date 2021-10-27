@@ -9,7 +9,7 @@ ITERATIONS_PATTERN = re_compile("Iterations: (\\d+)")
 CRIT_PATTERN = re_compile("Crit: (\\d+)")
 TASK_SIZE_PATTERN = re_compile("task_2_\\d+_n(\\d+).txt")
 
-ALGO_SET = ("base",)
+ALGO_SET = ("base","custom")
 CSV_HEADER = ["n", "base_iter", "ratio", "custom_iter", "ratio"]
 FLOAT_LENGTH = 9
 
@@ -26,7 +26,7 @@ def parse_output(stdout):
     return (iterations, crit)
 
 def save_csv(results):
-    with open("results.csv", "w") as _file:
+    with open('results.csv', 'w') as _file:
         _file.write('sep=,\n')
         _file.write(','.join(CSV_HEADER) + '\n')
         base_results = results[ALGO_SET[0]]
@@ -34,9 +34,9 @@ def save_csv(results):
         base_ratio_sum = 0
         custom_ratio_sum = 0
         for task in results[ALGO_SET[0]].keys():
-            size = base_results[task][2]
-            base_iterations = base_results[task][1]
-            custom_iterations = custom_results[task][1]
+            size = int(base_results[task][2])
+            base_iterations = int(base_results[task][0])
+            custom_iterations = int(custom_results[task][0])
             number_of_solutions = math_factorial(size)
 
             base_ratio = base_iterations / number_of_solutions - 1
@@ -65,6 +65,7 @@ def main():
             parsed_result = parse_output(process.stdout) + (TASK_SIZE_PATTERN.search(file).group(1),)
             results[algo][file] = parsed_result
             print(parsed_result)
-    print(results)
+    save_csv(results)
+
 if __name__ == "__main__":
     main()
