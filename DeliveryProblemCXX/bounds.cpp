@@ -218,9 +218,19 @@ std::size_t CustomLowerBound::get(Vertex& vertex, std::size_t additional_destina
 	std::size_t base_size = vertex.size();
 
 	std::size_t prev_vertex_idx = vertex[base_size - 1];
+	std::size_t max_target_date = 0;
 
+	for (std::size_t possible_descendant = 0; possible_descendant < task_size; ++possible_descendant) {
+		if (descendants_mask & (1llu << possible_descendant)) {
+			std::size_t time = this->my_task.get_target_date(possible_descendant);
+			if (max_target_date < time) {
+				max_target_date = time;
+			}
+		}
+	}
+
+	std::size_t min_time = INT_MAX;
 	for (std::size_t idx = 0; idx < task_size - base_size; ++idx) {
-		std::size_t min_time = INT_MAX;
 		std::size_t max_time = 0;
 		std::size_t max_vertex_idx = 0;
 		for (std::size_t possible_descendant = 0; possible_descendant < task_size; ++possible_descendant) {
@@ -237,10 +247,11 @@ std::size_t CustomLowerBound::get(Vertex& vertex, std::size_t additional_destina
 		}
 		prev_vertex_idx = max_vertex_idx + 1;
 		current_time += min_time;
-		if (this->my_task.get_target_date(max_vertex_idx) < current_time) {
+		if (max_target_date < current_time) {
 			current_crit += 1;
 		}
 	}
+
 	std::size_t base_crit = this->my_base_bound.get(vertex);
 	if (base_crit > current_crit) {
 		current_crit = base_crit;
