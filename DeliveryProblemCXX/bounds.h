@@ -37,10 +37,11 @@ private:
 
 class BaseLowerBound : public LowerBound {
 public:
-	BaseLowerBound(Task& task);
+	BaseLowerBound(Task& task, bool disable_cache = false);
 	virtual std::size_t get(Vertex& vertex, std::size_t additional_destination = 0) override;
 private:
 	Task& my_task;
+	bool disable_cache;
 	google::dense_hash_map<std::size_t, std::size_t> my_cache{};
 };
 

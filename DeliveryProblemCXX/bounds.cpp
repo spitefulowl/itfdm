@@ -166,14 +166,15 @@ std::size_t CustomUpperBound::get(Vertex& vertex, std::size_t additional_destina
 	return current_crit;
 }
 
-BaseLowerBound::BaseLowerBound(Task& task) : my_task(task) {
+BaseLowerBound::BaseLowerBound(Task& task, bool disable_cache) : my_task(task) {
+	this->disable_cache = disable_cache;
 	this->my_cache.set_empty_key(0);
 }
 
 std::size_t BaseLowerBound::get(Vertex& vertex, std::size_t additional_destination) {
 	if (additional_destination != 0) vertex.push_back(additional_destination);
 	std::size_t key = vertex.get_id();
-	if (this->my_cache.find(key) != this->my_cache.end() && additional_destination == 0) {
+	if (this->my_cache.find(key) != this->my_cache.end() && additional_destination == 0 && !disable_cache) {
 		return this->my_cache[key];
 	}
 
@@ -194,13 +195,13 @@ std::size_t BaseLowerBound::get(Vertex& vertex, std::size_t additional_destinati
 	if (additional_destination != 0) {
 		vertex.pop_back();
 	}
-	else {
+	else if (!disable_cache) {
 		this->my_cache[key] = current_crit;
 	}
 	return current_crit;
 }
 
-CustomLowerBound::CustomLowerBound(Task& task) : my_task(task), my_base_bound(BaseLowerBound(task)) {
+CustomLowerBound::CustomLowerBound(Task& task) : my_task(task), my_base_bound(BaseLowerBound(task, true)) {
 	this->my_cache.set_empty_key(0);
 }
 
@@ -218,36 +219,32 @@ std::size_t CustomLowerBound::get(Vertex& vertex, std::size_t additional_destina
 	std::size_t base_size = vertex.size();
 
 	std::size_t prev_vertex_idx = vertex[base_size - 1];
-	std::size_t max_target_date = 0;
-
-	for (std::size_t possible_descendant = 0; possible_descendant < task_size; ++possible_descendant) {
-		if (descendants_mask & (1llu << possible_descendant)) {
-			std::size_t time = this->my_task.get_target_date(possible_descendant);
-			if (max_target_date < time) {
-				max_target_date = time;
-			}
-		}
-	}
 
 	std::size_t min_time = INT_MAX;
 	for (std::size_t idx = 0; idx < task_size - base_size; ++idx) {
-		std::size_t max_time = 0;
-		std::size_t max_vertex_idx = 0;
+		std::size_t min_target_date = INT_MAX;
+		std::size_t min_vertex_idx = 0;
 		for (std::size_t possible_descendant = 0; possible_descendant < task_size; ++possible_descendant) {
 			std::size_t time = this->my_task.get_delivery_time(prev_vertex_idx, possible_descendant + 1);
-			if (time < min_time) {
+			if (time < min_time && prev_vertex_idx != possible_descendant + 1) {
 				min_time = time;
 			}
 			if (descendants_mask & (1llu << possible_descendant)) {
-				if (max_time < time) {
-					max_time = time;
-					max_vertex_idx = possible_descendant;
+				std::size_t current_date = this->my_task.get_target_date(possible_descendant);
+				if (min_target_date > current_date && time + current_time <= current_date) {
+					min_target_date = current_date;
+					min_vertex_idx = possible_descendant;
 				}
 			}
 		}
-		prev_vertex_idx = max_vertex_idx + 1;
+		if (min_target_date == INT_MAX) {
+			current_crit += task_size - base_size - idx;
+			break;
+		}
+		prev_vertex_idx = min_vertex_idx + 1;
 		current_time += min_time;
-		if (max_target_date < current_time) {
+		descendants_mask ^= 1llu << min_vertex_idx;
+		if (min_target_date < current_time) {
 			current_crit += 1;
 		}
 	}

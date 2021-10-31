@@ -3,11 +3,9 @@
 #include <vector>
 #include <string>
 
-static std::size_t vertex_id = 0;
+extern std::size_t vertex_id;
 
-static std::size_t init_vertex_id() {
-	return vertex_id++;
-}
+std::size_t init_vertex_id();
 
 class Vertex : public std::vector<std::size_t> {
 public:

@@ -4,8 +4,9 @@
 int main(int argc, char* argv[])
 {
 	Task task(argv[1]);
+	//Task task("../Task2/task_2_05_n10.txt");
 	BranchAndBound algorithm(task);
-	//Task task("../Task2/task_2_09_n50.txt");
+	//argv[2] = "custom";
 	if (std::strcmp(argv[2], "base") == 0) {
 		BaseLowerBound lower_bound(task);
 		BaseUpperBound upper_bound(task);

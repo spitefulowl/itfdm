@@ -2,6 +2,12 @@
 #include <fstream>
 #include <sstream>
 
+std::size_t vertex_id = 0;
+
+std::size_t init_vertex_id() {
+	return vertex_id++;
+}
+
 Task::Task(std::string filename) {
 	std::fstream file = std::fstream(filename, std::ios::in);
 	if (file.fail()) {
