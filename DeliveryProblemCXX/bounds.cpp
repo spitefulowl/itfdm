@@ -231,7 +231,7 @@ std::size_t CustomLowerBound::get(Vertex& vertex, std::size_t additional_destina
 			}
 			if (descendants_mask & (1llu << possible_descendant)) {
 				std::size_t current_date = this->my_task.get_target_date(possible_descendant);
-				if (min_target_date > current_date && time + current_time <= current_date) {
+				if (min_target_date > current_date && min_time + current_time <= current_date) {
 					min_target_date = current_date;
 					min_vertex_idx = possible_descendant;
 				}
