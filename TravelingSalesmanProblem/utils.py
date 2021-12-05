@@ -7,10 +7,10 @@ def get_crit(distances, solution):
     result = 0
     current_point = solution[0]
     for point in solution[1:]:
-        result += distances[current_point][point]
+        result += int(distances[current_point][point])
         current_point = point
 
-    return result + distances[current_point][solution[0]]
+    return result + int(distances[current_point][solution[0]])
 
 def greedy_solve(distances, points):
     points_list = points.tolist()

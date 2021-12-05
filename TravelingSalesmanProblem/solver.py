@@ -34,6 +34,7 @@ class Solver():
             next_solution = solutions[next_cluster_idx]
             nearest_pair = min(product([solution[-1]], next_solution), key=lambda x: self.task.distances[x[0], x[1]])
             split_point_idx = np.where(next_solution==nearest_pair[1])[0][0]
+            # TODO: implement random selection
             solution += next_solution[split_point_idx:].tolist() + next_solution[:split_point_idx].tolist()
 
         return np.array(solution)

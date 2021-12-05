@@ -6,7 +6,7 @@ import scipy.spatial
 from utils import compute_distances
 
 class SalesmanTask():
-    __coord_pattern = re_compile('\d (\d+.\d+) (\d+.\d+)')
+    __coord_pattern = re_compile('\d+ (\d+.*\d*) (\d+.*\d*)')
 
     def __init__(self, filename):
         self._read_task(filename)
@@ -20,7 +20,7 @@ class SalesmanTask():
             lines = _file.readlines()
             points = []
             for line in lines:
-                parsed_line = self.__coord_pattern.search(line)
+                parsed_line = self.__coord_pattern.search(line.strip())
                 if not parsed_line:
                     break
                 points.append((float(parsed_line.group(1)), float(parsed_line.group(2))))
