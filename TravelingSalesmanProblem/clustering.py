@@ -33,7 +33,10 @@ def _base_find_clusters(points, distances, cluster_points):
 
         clusters[nearest_cluster_point].append(point)
 
-    return np.array(clusters)
+    for k, v in clusters.items():
+        clusters[k] = np.array(v)
+
+    return clusters
 
 def _base_find_cluster_points(points, distances, start_points: list, clusters_count: int):
     for point in range(clusters_count - len(start_points)):

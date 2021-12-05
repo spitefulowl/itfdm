@@ -1,4 +1,5 @@
 import numpy as np
+from itertools import product
 
 from clustering import base_get_clusters
 from salesman_task import SalesmanTask
@@ -6,20 +7,36 @@ from salesman_task import SalesmanTask
 import utils
 
 class Solver():
-    def __init__(self, task: SalesmanTask, clusters_count, depth, clusters_get_callable=base_get_clusters):
+    def __init__(self, task: SalesmanTask, clusters_count, depth, get_clusters_callable=base_get_clusters):
         self.clusters_count = clusters_count
         self.depth = depth
         self.task = task
-        self._clusters_get_callable = clusters_get_callable
+        self._get_clusters_callable = get_clusters_callable
         self._cluster_points = np.array([point for point in range(clusters_count)])
 
-    def set_clusters_getter(self, clusters_get_callable):
-        self._clusters_get_callable = clusters_get_callable
+    def set_clusters_getter(self, get_clusters_callable):
+        self._get_clusters_callable = get_clusters_callable
 
     def _restore_solution(self, cluster_solution, solutions):
         solution = []
-        for cluster_idx in cluster_solution[:-1]:
-            pass
+        current_cluster_idx = cluster_solution[0]
+        next_cluster_idx = cluster_solution[1]
+        current_solution = solutions[current_cluster_idx]
+        next_solution = solutions[next_cluster_idx]
+        nearest_pair = min(product(current_solution, next_solution), key=lambda x: self.task.distances[x[0], x[1]])
+        start_point_idx = np.where(current_solution==nearest_pair[0])[0][0]
+        split_point_idx = np.where(next_solution==nearest_pair[1])[0][0]
+        solution += current_solution[start_point_idx:].tolist() + current_solution[:start_point_idx].tolist()
+        solution += next_solution[split_point_idx:].tolist() + next_solution[:split_point_idx].tolist()
+
+        for idx in range(2, len(cluster_solution)):
+            next_cluster_idx = cluster_solution[idx]
+            next_solution = solutions[next_cluster_idx]
+            nearest_pair = min(product([solution[-1]], next_solution), key=lambda x: self.task.distances[x[0], x[1]])
+            split_point_idx = np.where(next_solution==nearest_pair[1])[0][0]
+            solution += next_solution[split_point_idx:].tolist() + next_solution[:split_point_idx].tolist()
+
+        return np.array(solution)
 
     def _recursive_solve(self, points, current_depth):
         if current_depth == 0:
@@ -27,10 +44,11 @@ class Solver():
 
         centers = []
         solutions = []
-        clusters = self._clusters_get_callable(points, self.task.distances, self.clusters_count)
+        clusters = self._get_clusters_callable(points, self.task.distances, self.clusters_count)
         for cluster in clusters.values():
-            centers.append(cluster.mean(axis=0))
-            if len(clusters) < self.clusters_count:
+            cluster_with_coords = np.array([self.task.points[point] for point in cluster])
+            centers.append(cluster_with_coords.mean(axis=0))
+            if len(cluster) <= self.clusters_count:
                 solutions.append(utils.greedy_solve(self.task.distances, cluster))
             else:
                 solutions.append(self._recursive_solve(cluster, current_depth - 1))

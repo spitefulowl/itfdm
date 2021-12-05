@@ -13,7 +13,7 @@ def get_crit(distances, solution):
     return result + distances[current_point][solution[0]]
 
 def greedy_solve(distances, points):
-    points_list = points.to_list()
+    points_list = points.tolist()
     solution = [points_list.pop()]
     while points_list:
         nearest_point = points_list[0]
@@ -30,8 +30,11 @@ def greedy_solve(distances, points):
     return np.array(solution)
 
 def bruteforce_solve(distances, points):
-    return np.array(min(itertools.permutations(points), key=lambda x: get_crit(x)))
+    return np.array(min(itertools.permutations(points), key=lambda x: get_crit(distances, x)))
 
 def compute_distances(points):
+    if len(np.asmatrix(points)) == 1:
+        return np.array([0])
+
     return np.array([scipy.spatial.distance.cdist(points, np.asmatrix(point))
                         for point in points])
