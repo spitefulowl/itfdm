@@ -16,7 +16,8 @@ def main():
     task = SalesmanTask(args.input)
     solver = Solver(task, 8, 3)
     result = solver.solve()
-    print(f'solution: 0\ncrit: {get_crit(task.distances, result)}')
+    assert(len(set(result)) == len(result))
+    print(f'crit: {get_crit(task.distances, result)}')
 
 if __name__ == '__main__':
     main()
