@@ -5,8 +5,9 @@ from salesman_task import SalesmanTask
 from clustering import base_get_clusters
 from solver import Solver
 
-import matplotlib.pyplot as plt
 import numpy as np
+
+import utils
 
 def parse_arguments():
     parser = ArgumentParser()
