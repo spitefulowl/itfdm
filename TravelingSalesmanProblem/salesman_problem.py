@@ -5,6 +5,8 @@ from salesman_task import SalesmanTask
 from clustering import base_get_clusters
 from solver import Solver
 
+import matplotlib.pyplot as plt
+import numpy as np
 
 def parse_arguments():
     parser = ArgumentParser()
@@ -17,6 +19,7 @@ def main():
     solver = Solver(task, 8, 3)
     result = solver.solve()
     assert(len(set(result)) == len(result))
+
     print(f'crit: {get_crit(task.distances, result)}')
 
 if __name__ == '__main__':

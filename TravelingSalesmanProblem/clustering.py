@@ -39,7 +39,7 @@ def _base_find_clusters(points, distances, cluster_points):
     return clusters
 
 def _base_find_cluster_points(points, distances, start_points: list, clusters_count: int):
-    for point in range(clusters_count - len(start_points)):
+    for iter_idx in range(clusters_count - len(start_points)):
         start_points.append(_get_far_point(points, distances, start_points))
 
     return start_points

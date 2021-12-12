@@ -1,6 +1,5 @@
 import numpy as np
 from itertools import product
-import matplotlib.pyplot as plt
 
 from clustering import base_get_clusters
 from salesman_task import SalesmanTask
@@ -48,22 +47,14 @@ class Solver():
         centers = []
         solutions = []
         clusters = self._get_clusters_callable(points, self.task.distances, self.clusters_count)
-        for key, cluster in clusters.items():
+        for cluster in clusters.values():
             cluster_with_coords = np.array([self.task.points[point] for point in cluster])
-            x, y = cluster_with_coords.T
-            index = cluster.tolist().index(key)
-            # print(f'Cluster: {cluster}')
-            # print(f'Center: {key}')
-            # print(f'Center coords: {cluster_with_coords[index]}')
-            # plt.scatter(x, y)
-
             centers.append(cluster_with_coords.mean(axis=0))
             if len(cluster) <= self.clusters_count:
                 solutions.append(utils.bruteforce_solve(self.task.distances, cluster))
             else:
                 solutions.append(self._recursive_solve(cluster, current_depth - 1))
 
-        # plt.show()
         centers = np.array(centers)
         centers_distances = utils.compute_distances(centers)
         cluster_solution = utils.bruteforce_solve(centers_distances, self._cluster_points)
