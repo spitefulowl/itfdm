@@ -19,6 +19,7 @@ if __name__ == '__main__':
     task_files = os.listdir(PATH_TO_TASKS_DIR)
 
     base_dev_sum = 0
+    custom_dev_sum = 0
 
     with open('result.csv', 'w') as _file:
         _file.write('sep=,\n')
@@ -30,10 +31,16 @@ if __name__ == '__main__':
             task = sp.SalesmanTask(path_to_task)
             base_solver = sp.Solver(task, 8, 3)
             base_crit = sp.utils.get_crit(task.distances, base_solver.solve())
-            base_dev = SOLUTIONS[task_file] / base_crit
+            base_dev = 1 - SOLUTIONS[task_file] / base_crit
             base_dev_sum += base_dev
 
-            _file.write(','.join(map(str, [task_file, base_crit, base_dev, '', '', SOLUTIONS[task_file]])) + '\n')
+            custom_solver = sp.Solver(task, 8, 3, sp.custom_get_clusters, sp.utils.custom_selector)
+            custom_crit = sp.utils.get_crit(task.distances, custom_solver.solve())
+            custom_dev = 1 - SOLUTIONS[task_file] / custom_crit
+            custom_dev_sum += custom_dev
+
+            _file.write(','.join(map(str, [task_file, base_crit, base_dev, custom_crit, custom_dev, SOLUTIONS[task_file]])) + '\n')
 
         base_dev_avg = base_dev_sum / len(task_files)
-        _file.write(','.join(map(str, ['', '', base_dev_avg])) + '\n')
+        custom_dev_avg = custom_dev_sum / len(task_files)
+        _file.write(','.join(map(str, ['', '', base_dev_avg, '', custom_dev_avg])) + '\n')

@@ -13,7 +13,6 @@ class Solver():
         self.task = task
         self._get_clusters_callable = get_clusters_callable
         self._selector_callable = selector_callable
-        self._cluster_points = np.array([point for point in range(clusters_count)])
 
     def set_clusters_getter(self, get_clusters_callable):
         self._get_clusters_callable = get_clusters_callable
@@ -46,7 +45,7 @@ class Solver():
 
         centers = []
         solutions = []
-        clusters = self._get_clusters_callable(points, self.task.distances, self.clusters_count)
+        clusters = self._get_clusters_callable(points, self.task.distances, self.clusters_count, self.task)
         for cluster in clusters.values():
             cluster_with_coords = np.array([self.task.points[point] for point in cluster])
             centers.append(cluster_with_coords.mean(axis=0))
@@ -57,7 +56,8 @@ class Solver():
 
         centers = np.array(centers)
         centers_distances = utils.compute_distances(centers)
-        cluster_solution = utils.bruteforce_solve(centers_distances, self._cluster_points)
+        _cluster_points = np.array([point for point in range(len(clusters))])
+        cluster_solution = utils.bruteforce_solve(centers_distances, _cluster_points)
         return self._restore_solution(cluster_solution, solutions)
 
     def solve(self):

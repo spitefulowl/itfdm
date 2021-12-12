@@ -52,3 +52,20 @@ def base_selector(next_solution, solution, task):
         return next_solution[split_point_idx:].tolist() + next_solution[:split_point_idx].tolist()
     else:
         return list(reversed(next_solution.tolist()))[split_point_idx:] + list(reversed(next_solution.tolist()))[:split_point_idx]
+
+def custom_selector(next_solution, solution, task):
+    nearest_pair = min(product([solution[-1]], next_solution), key=lambda x: task.distances[x[0]][x[1]])
+    split_point_idx = np.where(next_solution==nearest_pair[1])[0][0]
+    if split_point_idx == 0 or split_point_idx == len(next_solution) - 1 or len(next_solution) < 3:
+        return next_solution[split_point_idx:].tolist() + next_solution[:split_point_idx].tolist()
+
+    prev_point = next_solution[split_point_idx - 1]
+    split_point = next_solution[split_point_idx]
+    next_point = next_solution[split_point_idx + 1]
+    prev_mid_dist = task.distances[prev_point][split_point]
+    mid_next_dist = task.distances[split_point][next_point]
+
+    if mid_next_dist < prev_mid_dist:
+        return next_solution[split_point_idx:].tolist() + next_solution[:split_point_idx].tolist()
+    else:
+        return list(reversed(next_solution.tolist()))[split_point_idx:] + list(reversed(next_solution.tolist()))[:split_point_idx]
